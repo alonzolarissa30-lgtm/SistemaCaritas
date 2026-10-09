@@ -2,6 +2,7 @@ import os
 from datetime import datetime, timezone, timedelta
 from functools import wraps
 from io import BytesIO
+from dotenv import load_dotenv
 
 from flask import (
     Flask, render_template, request, redirect, url_for, send_file, session, flash,
@@ -13,8 +14,10 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from werkzeug.security import generate_password_hash, check_password_hash
 
+load_dotenv()
+
 app = Flask(__name__)
-database_url = os.environ.get("postgresql://postgres.taajqatifnaeunjnmqen:Alli2025sql@aws-0-us-east-1.pooler.supabase.com:5432/postgres", "sqlite:///puesto.db")
+database_url = os.environ.get("DATABASE_URL", "sqlite:///puesto.db")
 if database_url.startswith("postgres://"):
     database_url = database_url.replace("postgres://", "postgresql+psycopg://", 1)
 elif database_url.startswith("postgresql://"):
