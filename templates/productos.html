@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Productos</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 700px; margin: 20px auto; padding: 0 12px; }
+    h1 { color: #7b3f00; }
+    form.fila { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; align-items: center; }
+    input { padding: 8px; font-size: 16px; }
+    button { padding: 8px 12px; font-size: 16px; cursor: pointer; }
+    .inactivo { opacity: 0.5; }
+    .nuevo { background: #f3e5d0; padding: 12px; border-radius: 8px; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  {% include "menu.html" %}
+  <h1>Productos y precios</h1>
+
+  <div class="nuevo">
+    <h3>Agregar producto</h3>
+    <form class="fila" action="{{ url_for('agregar') }}" method="post">
+      <input type="text" name="nombre" placeholder="Nombre del plato" required>
+      <input type="number" name="precio" placeholder="Precio (Q)" step="0.01" min="0" required>
+      <button type="submit">Agregar</button>
+    </form>
+  </div>
+
+  {% for p in productos %}
+    <div class="{{ '' if p.activo else 'inactivo' }}">
+      <form class="fila" action="{{ url_for('actualizar', id=p.id) }}" method="post">
+        <input type="text" name="nombre" value="{{ p.nombre }}" required>
+        <input type="number" name="precio" value="{{ p.precio }}" step="0.01" min="0" required>
+        <button type="submit">Guardar</button>
+      </form>
+      <form class="fila" action="{{ url_for('activar', id=p.id) }}" method="post">
+        <button type="submit">{{ 'Desactivar' if p.activo else 'Activar' }}</button>
+        <span>{{ 'Activo' if p.activo else 'Desactivado' }}</span>
+      </form>
+      <hr>
+    </div>
+  {% else %}
+    <p>Todavía no hay productos. Agrega el primero arriba.</p>
+  {% endfor %}
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ventas del día</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 700px; margin: 20px auto; padding: 0 12px; }
+    h1 { color: #7b3f00; }
+    .pedido { border: 1px solid #ddd; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+    .total-dia { font-size: 22px; font-weight: bold; background: #f3e5d0;
+                 padding: 12px; border-radius: 8px; margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+  {% include "menu.html" %}
+  <h1>Ventas del día</h1>
+  <p>Fecha: {{ fecha.strftime('%d/%m/%Y') }}</p>
+
+  <div class="total-dia">
+    {{ pedidos|length }} pedido(s) · Total: Q{{ '%.2f'|format(total_dia) }}
+  </div>
+
+  <form action="{{ url_for('reporte_pdf') }}" method="get" style="margin-bottom: 16px;">
+    <label>Fecha:
+      <input type="date" name="fecha" value="{{ fecha.strftime('%Y-%m-%d') }}"
+             style="padding: 8px; font-size: 16px;">
+    </label>
+    <button type="submit" style="padding: 8px 12px; font-size: 16px;">Descargar PDF</button>
+  </form>
+
+  {% for pedido in pedidos %}
+    <div class="pedido">
+      <strong>{{ pedido.fecha_hora.strftime('%H:%M') }}</strong>
+      {% if pedido.tomado_por %} · tomado por {{ pedido.tomado_por }}{% endif %}
+      <ul>
+        {% for d in pedido.detalles %}
+          <li>{{ d.cantidad }} × {{ d.producto.nombre }} (Q{{ '%.2f'|format(d.precio_vendido) }})</li>
+        {% endfor %}
+      </ul>
+      <strong>Total: Q{{ '%.2f'|format(pedido.total) }}</strong>
+    </div>
+  {% else %}
+    <p>Todavía no hay pedidos hoy.</p>
+  {% endfor %}
+</body>
+</html>

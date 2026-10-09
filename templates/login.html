@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Iniciar sesión</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 380px; margin: 40px auto; padding: 0 12px; }
+    h1 { color: #7b3f00; }
+    input { display: block; width: 100%; box-sizing: border-box; padding: 10px; font-size: 16px; margin-bottom: 12px; }
+    button { width: 100%; padding: 12px; font-size: 18px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Iniciar sesión</h1>
+  {% include "mensajes.html" %}
+  <form method="post">
+    <input type="text" name="usuario" placeholder="Usuario" autocomplete="username" required autofocus>
+    <input type="password" name="clave" placeholder="Contraseña" autocomplete="current-password" required>
+    <button type="submit">Entrar</button>
+  </form>
+</body>
+</html>

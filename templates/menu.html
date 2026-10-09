@@ -1,0 +1,11 @@
+<nav style="margin-bottom: 16px; display: flex; gap: 14px; flex-wrap: wrap; align-items: center;">
+  <a href="{{ url_for('nuevo_pedido') }}">Tomar pedido</a>
+  {% if session.get('rol') == 'admin' %}
+    <a href="{{ url_for('ventas_hoy') }}">Ventas del día</a>
+    <a href="{{ url_for('productos') }}">Productos</a>
+    <a href="{{ url_for('usuarios') }}">Usuarios</a>
+  {% endif %}
+  <span style="margin-left: auto;">
+    {{ session.get('usuario') }} · <a href="{{ url_for('logout') }}">Salir</a>
+  </span>
+</nav>

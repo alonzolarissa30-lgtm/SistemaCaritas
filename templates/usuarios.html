@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Usuarios</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 700px; margin: 20px auto; padding: 0 12px; }
+    h1 { color: #7b3f00; }
+    form.fila { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; align-items: center; }
+    input, select { padding: 8px; font-size: 16px; }
+    button { padding: 8px 12px; font-size: 16px; cursor: pointer; }
+    .inactivo { opacity: 0.5; }
+    .nuevo { background: #f3e5d0; padding: 12px; border-radius: 8px; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  {% include "menu.html" %}
+  <h1>Usuarios</h1>
+  {% include "mensajes.html" %}
+
+  <div class="nuevo">
+    <h3>Agregar usuario</h3>
+    <form class="fila" action="{{ url_for('agregar_usuario') }}" method="post">
+      <input type="text" name="usuario" placeholder="Usuario" required>
+      <input type="password" name="clave" placeholder="Contraseña (mín. 6)" autocomplete="new-password" required>
+      <select name="rol">
+        <option value="empleado">Empleado</option>
+        <option value="admin">Administrador</option>
+      </select>
+      <button type="submit">Agregar</button>
+    </form>
+  </div>
+
+  {% for u in usuarios %}
+    <div class="{{ '' if u.activo else 'inactivo' }}">
+      <strong>{{ u.usuario }}</strong> · {{ 'Administrador' if u.rol == 'admin' else 'Empleado' }}
+      · {{ 'Activo' if u.activo else 'Desactivado' }}
+      <form class="fila" action="{{ url_for('cambiar_clave', id=u.id) }}" method="post">
+        <input type="password" name="clave" placeholder="Nueva contraseña" autocomplete="new-password" required>
+        <button type="submit">Cambiar contraseña</button>
+      </form>
+      {% if u.id != session.get('usuario_id') %}
+        <form class="fila" action="{{ url_for('activar_usuario', id=u.id) }}" method="post">
+          <button type="submit">{{ 'Desactivar' if u.activo else 'Activar' }}</button>
+        </form>
+      {% endif %}
+      <hr>
+    </div>
+  {% endfor %}
+</body>
+</html>
