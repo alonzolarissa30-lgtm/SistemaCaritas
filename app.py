@@ -14,7 +14,12 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///puesto.db"
+database_url = os.environ.get("postgresql://postgres.taajqatifnaeunjnmqen:Alli2025sql@aws-0-us-east-1.pooler.supabase.com:5432/postgres", "sqlite:///puesto.db")
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql+psycopg://", 1)
+elif database_url.startswith("postgresql://"):
+    database_url = database_url.replace("postgresql://", "postgresql+psycopg://", 1)
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 # Clave para firmar las sesiones. En internet se define con una variable de entorno.
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "clave-solo-para-pruebas-locales")
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
